@@ -9,11 +9,15 @@ class HomeScreen extends StatelessWidget {
           "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       createdAt: DateTime.parse("2020-01-01 20:18:04"),
       user: User(name: "foo", icon: "assets/images/user1.png"),
+      like: 0,
+      isLiked: false,
     ),
     Tweet(
       tweet: "bbbbb",
       createdAt: DateTime.parse("2020-01-10 22:48:04"),
       user: User(name: "bar", icon: "assets/images/user2.png"),
+      like: 10,
+      isLiked: true,
     ),
   ];
 
@@ -68,6 +72,10 @@ class _Tweet extends StatelessWidget {
                     ],
                   ),
                   Text(tweet.tweet),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: _Like(like: tweet.like, isLiked: tweet.isLiked),
+                  ),
                 ],
               ),
             )
@@ -89,5 +97,38 @@ class _Tweet extends StatelessWidget {
       return '${duration.inMinutes}分';
     }
     return '${duration.inSeconds}秒';
+  }
+}
+
+class _Like extends StatelessWidget {
+  final int like;
+  final bool isLiked;
+
+  IconData get icon => isLiked ? Icons.favorite : Icons.favorite_border;
+  Color get iconColor => isLiked ? Colors.pink : Colors.grey;
+
+  _Like({@required this.like, @required this.isLiked});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Icon(
+          icon,
+          size: 15,
+          color: iconColor,
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        Text(
+          like.toString(),
+          style: TextStyle(
+            fontSize: 12,
+            color: Colors.grey,
+          ),
+        ),
+      ],
+    );
   }
 }

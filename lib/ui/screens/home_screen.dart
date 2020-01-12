@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 
 class HomeScreen extends StatelessWidget {
   final tweets = [
@@ -46,40 +48,50 @@ class _Tweet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Image.asset(
-              tweet.user.icon,
-              height: 50,
-              width: 50,
-            ),
-            SizedBox(width: 10),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      Text(tweet.user.name),
-                      SizedBox(width: 5),
-                      Text(
-                        _duration(from: tweet.createdAt),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                  Text(tweet.tweet),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: _Like(like: tweet.like, isLiked: tweet.isLiked),
-                  ),
-                ],
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.asset(
+                tweet.user.icon,
+                height: 50,
+                width: 50,
               ),
-            )
-          ],
+              SizedBox(width: 10),
+              Flexible(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Text(tweet.user.name),
+                        SizedBox(width: 5),
+                        Text(
+                          _duration(from: tweet.createdAt),
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    Text(tweet.tweet),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: Like(like: tweet.like, isLiked: tweet.isLiked),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TweetScreen(
+              tweet: tweet,
+            ),
+          ),
         ),
       ),
     );
@@ -97,38 +109,5 @@ class _Tweet extends StatelessWidget {
       return '${duration.inMinutes}分';
     }
     return '${duration.inSeconds}秒';
-  }
-}
-
-class _Like extends StatelessWidget {
-  final int like;
-  final bool isLiked;
-
-  IconData get icon => isLiked ? Icons.favorite : Icons.favorite_border;
-  Color get iconColor => isLiked ? Colors.pink : Colors.grey;
-
-  _Like({@required this.like, @required this.isLiked});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: <Widget>[
-        Icon(
-          icon,
-          size: 15,
-          color: iconColor,
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        Text(
-          like.toString(),
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
-        ),
-      ],
-    );
   }
 }

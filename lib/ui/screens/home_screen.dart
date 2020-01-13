@@ -5,7 +5,7 @@ import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 
 class HomeScreen extends StatelessWidget {
-  final tweets = [
+  final _tweets = [
     Tweet(
       tweet:
           "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -23,6 +23,8 @@ class HomeScreen extends StatelessWidget {
     ),
   ];
 
+  HomeScreen({Key key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,19 +33,21 @@ class HomeScreen extends StatelessWidget {
       ),
       body: ListView.builder(
         itemBuilder: (context, int index) {
-          final tweet = tweets[index];
+          final tweet = _tweets[index];
           return _Tweet(tweet: tweet);
         },
-        itemCount: tweets.length,
+        itemCount: _tweets.length,
       ),
     );
   }
 }
 
 class _Tweet extends StatelessWidget {
-  final Tweet tweet;
+  final Tweet _tweet;
 
-  _Tweet({Key key, @required this.tweet}) : super(key: key);
+  _Tweet({Key key, @required tweet})
+      : _tweet = tweet,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +59,7 @@ class _Tweet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Image.asset(
-                tweet.user.icon,
+                _tweet.user.icon,
                 height: 50,
                 width: 50,
               ),
@@ -66,18 +70,18 @@ class _Tweet extends StatelessWidget {
                   children: <Widget>[
                     Row(
                       children: <Widget>[
-                        Text(tweet.user.name),
+                        Text(_tweet.user.name),
                         SizedBox(width: 5),
                         Text(
-                          _duration(from: tweet.createdAt),
+                          _duration(from: _tweet.createdAt),
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
-                    Text(tweet.tweet),
+                    Text(_tweet.tweet),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Like(like: tweet.like, isLiked: tweet.isLiked),
+                      child: Like(like: _tweet.like, isLiked: _tweet.isLiked),
                     ),
                   ],
                 ),
@@ -89,7 +93,7 @@ class _Tweet extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => TweetScreen(
-              tweet: tweet,
+              tweet: _tweet,
             ),
           ),
         ),

@@ -10,6 +10,7 @@ class Like extends StatelessWidget {
   Color get _iconColor => _isLiked ? Colors.pink : Colors.grey;
 
   Like({
+    Key key,
     @required int like,
     @required bool isLiked,
     double fontSize = 12,
@@ -17,7 +18,8 @@ class Like extends StatelessWidget {
   })  : _like = like,
         _isLiked = isLiked,
         _fontSize = fontSize,
-        _iconSize = iconSize;
+        _iconSize = iconSize,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {

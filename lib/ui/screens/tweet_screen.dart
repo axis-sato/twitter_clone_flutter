@@ -5,9 +5,11 @@ import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 import 'package:intl/intl.dart';
 
 class TweetScreen extends StatelessWidget {
-  final Tweet tweet;
+  final Tweet _tweet;
 
-  TweetScreen({Key key, @required this.tweet}) : super(key: key);
+  TweetScreen({Key key, @required tweet})
+      : _tweet = tweet,
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,20 +23,20 @@ class TweetScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _Profile(
-                user: tweet.user,
+                user: _tweet.user,
               ),
               SizedBox(height: 10),
               _Tweet(
-                tweet: tweet,
+                tweet: _tweet,
               ),
               SizedBox(height: 5),
               _CreatedAt(
-                dateTime: tweet.createdAt,
+                dateTime: _tweet.createdAt,
               ),
               SizedBox(height: 5),
               Like(
-                like: tweet.like,
-                isLiked: tweet.isLiked,
+                like: _tweet.like,
+                isLiked: _tweet.isLiked,
                 fontSize: 15,
                 iconSize: 20,
               ),

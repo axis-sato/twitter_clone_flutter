@@ -37,7 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
           TweetListScreen(
             key: PageStorageKey<String>('tweet_list'),
           ),
-          UserListScreen(),
+          UserListScreen(
+            key: PageStorageKey<String>('user_list'),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

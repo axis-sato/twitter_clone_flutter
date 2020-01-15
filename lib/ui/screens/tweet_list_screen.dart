@@ -10,8 +10,12 @@ class TweetListScreen extends StatelessWidget {
       tweet: "ツイート $i",
       createdAt: DateTime.now(),
       user: User(
-          name: "ユーザ${(i % 2) + 1}",
-          icon: "assets/images/user${(i % 2) + 1}.png"),
+        name: "ユーザ${(i % 2) + 1}",
+        icon: "assets/images/user${(i % 2) + 1}.png",
+        profile: "ユーザ${i + 1}です。",
+        isFollower: i % 2 == 1,
+        followerCount: i,
+      ),
       like: i,
       isLiked: i % 2 == 1,
     );

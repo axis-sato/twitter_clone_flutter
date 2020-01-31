@@ -1,26 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
+import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/tweet_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 
 class TweetListScreen extends StatelessWidget {
-  final _tweets = List<Tweet>.generate(100, (i) {
-    return Tweet(
-      tweet: "ツイート $i",
-      createdAt: DateTime.now(),
-      user: User(
-        name: "ユーザ${(i % 2) + 1}",
-        icon: "assets/images/user${(i % 2) + 1}.png",
-        profile: "ユーザ${i + 1}です。",
-        isFollower: i % 2 == 1,
-        followerCount: i,
-      ),
-      like: i,
-      isLiked: i % 2 == 1,
-    );
-  });
-
   TweetListScreen({Key key}) : super(key: key);
 
   @override
@@ -29,12 +16,21 @@ class TweetListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('ホーム'),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, int index) {
-          final tweet = _tweets[index];
-          return _Tweet(tweet: tweet);
-        },
-        itemCount: _tweets.length,
+      body: ChangeNotifierProvider(
+        create: (context) => TweetViewModel(
+          tweetRepository: Provider.of<TweetRepository>(context, listen: false),
+        ),
+        child: Consumer<TweetViewModel>(
+          builder: (context, vm, child) {
+            return ListView.builder(
+              itemBuilder: (context, int index) {
+                final tweet = vm.tweets[index];
+                return _Tweet(tweet: tweet);
+              },
+              itemCount: vm.tweets.length,
+            );
+          },
+        ),
       ),
     );
   }

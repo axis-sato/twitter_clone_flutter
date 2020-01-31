@@ -5,10 +5,11 @@ class User {
   final bool isFollower;
   final int followerCount;
 
-  const User(
-      {this.name,
-      this.icon,
-      this.profile,
-      this.isFollower,
-      this.followerCount});
+  const User({
+    this.name,
+    this.icon,
+    this.profile,
+    this.isFollower,
+    this.followerCount,
+  });
 }

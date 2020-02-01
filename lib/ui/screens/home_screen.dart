@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:twitter_clone_flutter/ui/screens/tweet_list_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {

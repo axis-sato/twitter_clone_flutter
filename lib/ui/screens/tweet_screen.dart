@@ -56,7 +56,7 @@ class _Profile extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Image.asset(
+        Image.network(
           _user.icon,
           height: 50,
           width: 50,

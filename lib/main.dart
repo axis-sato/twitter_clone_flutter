@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter_clone_flutter/core/data/api.dart';
 import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
 import 'package:twitter_clone_flutter/ui/screens/home_screen.dart';
 
@@ -10,7 +11,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<TweetRepository>(create: (_) => TweetRepository()),
+        Provider<Api>(create: (_) => Api()),
+        ProxyProvider<Api, TweetRepository>(
+          create: (context) => TweetRepository(),
+          update: (context, api, repository) => repository..api = api,
+        ),
       ],
       child: MaterialApp(
         title: 'ツイッタークローン',

@@ -4,7 +4,7 @@ import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
-import 'package:twitter_clone_flutter/ui/viewmodels/tweet_view_model.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 
 class TweetListScreen extends StatelessWidget {
@@ -17,10 +17,11 @@ class TweetListScreen extends StatelessWidget {
         title: Text('ホーム'),
       ),
       body: ChangeNotifierProvider(
-        create: (context) => TweetViewModel(
-          tweetRepository: Provider.of<TweetRepository>(context, listen: false),
-        ),
-        child: Consumer<TweetViewModel>(
+        create: (context) => TweetListViewModel(
+            tweetRepository:
+                Provider.of<TweetRepository>(context, listen: false))
+          ..init(),
+        child: Consumer<TweetListViewModel>(
           builder: (context, vm, child) {
             return ListView.builder(
               itemBuilder: (context, int index) {
@@ -52,7 +53,7 @@ class _Tweet extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Image.asset(
+              Image.network(
                 _tweet.user.icon,
                 height: 50,
                 width: 50,

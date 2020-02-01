@@ -6,6 +6,7 @@ class UserListScreen extends StatelessWidget {
 
   final _users = List<User>.generate(100, (int i) {
     return User(
+      id: i + 1,
       name: "ユーザ${i + 1}",
       icon: "assets/images/user${(i % 2) + 1}.png",
       profile: "ユーザ${i + 1}です。",

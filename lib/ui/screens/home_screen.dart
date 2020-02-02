@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -34,8 +37,14 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         children: <Widget>[
-          TweetListScreen(
-            key: PageStorageKey<String>('tweet_list'),
+          ChangeNotifierProvider(
+            create: (context) => TweetListViewModel(
+                tweetRepository:
+                    Provider.of<TweetRepository>(context, listen: false))
+              ..init(),
+            child: TweetListScreen(
+              key: PageStorageKey<String>('tweet_list'),
+            ),
           ),
           UserListScreen(
             key: PageStorageKey<String>('user_list'),

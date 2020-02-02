@@ -15,6 +15,13 @@ class Tweets {
       containsFirstTweet: json['contains_first_tweet'],
     );
   }
+
+  Tweets copyWith(List<Tweet> tweets, bool containsFirstTweet) {
+    return Tweets(
+      tweets: tweets ?? this.tweets,
+      containsFirstTweet: containsFirstTweet ?? this.containsFirstTweet,
+    );
+  }
 }
 
 class Tweet {

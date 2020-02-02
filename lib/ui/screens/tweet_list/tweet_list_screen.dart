@@ -7,8 +7,28 @@ import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 
-class TweetListScreen extends StatelessWidget {
+class TweetListScreen extends StatefulWidget {
   TweetListScreen({Key key}) : super(key: key);
+
+  @override
+  _TweetListScreenState createState() => _TweetListScreenState();
+}
+
+class _TweetListScreenState extends State<TweetListScreen> {
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 100.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,24 +36,31 @@ class TweetListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('ホーム'),
       ),
-      body: ChangeNotifierProvider(
-        create: (context) => TweetListViewModel(
-            tweetRepository:
-                Provider.of<TweetRepository>(context, listen: false))
-          ..init(),
-        child: Consumer<TweetListViewModel>(
-          builder: (context, vm, child) {
-            return ListView.builder(
-              itemBuilder: (context, int index) {
-                final tweet = vm.tweets[index];
-                return _Tweet(tweet: tweet);
-              },
-              itemCount: vm.tweets.length,
-            );
-          },
-        ),
+      body: Consumer<TweetListViewModel>(
+        builder: (context, vm, child) {
+          return ListView.builder(
+            itemBuilder: (context, int index) {
+              if (index == vm.tweets.length) {
+                return vm.loading ? _BottomLoader() : Container();
+              }
+              final tweet = vm.tweets[index];
+              return _Tweet(tweet: tweet);
+            },
+            itemCount: vm.tweets.length + 1,
+            controller: _scrollController,
+          );
+        },
       ),
     );
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      final vm = Provider.of<TweetListViewModel>(context, listen: false);
+      vm.moreTweets();
+    }
   }
 }
 
@@ -108,5 +135,26 @@ class _Tweet extends StatelessWidget {
       return '${duration.inMinutes}分';
     }
     return '${duration.inSeconds}秒';
+  }
+}
+
+class _BottomLoader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      alignment: Alignment.center,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Center(
+          child: SizedBox(
+            width: 33,
+            height: 33,
+            child: CircularProgressIndicator(
+              strokeWidth: 1.5,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

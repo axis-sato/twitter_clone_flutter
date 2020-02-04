@@ -15,6 +15,9 @@ class TweetListViewModel extends ChangeNotifier {
   bool get hasReachedMax =>
       _tweets == null ? false : _tweets.containsFirstTweet;
 
+  int get _firstTweetIdInTheList =>
+      _tweets == null ? null : _tweets.tweets.first.id;
+
   int get _lastTweetIdInTheList =>
       _tweets == null ? null : _tweets.tweets.last.id;
 
@@ -24,29 +27,51 @@ class TweetListViewModel extends ChangeNotifier {
   void init() async {
     loading = true;
     notifyListeners();
-    _tweets = await _fetchTweets(null);
+    _tweets = await _fetchTweetsAfter(null);
     loading = false;
     notifyListeners();
   }
 
-  void moreTweets() async {
+  Future<void> fetchNewTweets() async {
+    if (loading) {
+      return;
+    }
+    loading = true;
+    notifyListeners();
+    final minId =
+        _firstTweetIdInTheList == null ? null : _firstTweetIdInTheList + 1;
+    final tweets = await _fetchTweetsBefore(minId);
+    _tweets = _tweets == null
+        ? tweets
+        : _tweets.copyWith(tweets.tweets + _tweets.tweets, null);
+    loading = false;
+    notifyListeners();
+  }
+
+  void fetchMoreTweets() async {
     if (loading || hasReachedMax) {
       return;
     }
     loading = true;
     notifyListeners();
-    final lastTweetIdInTheList =
+    final maxId =
         _lastTweetIdInTheList == null ? null : _lastTweetIdInTheList - 1;
-    final tweets = await _fetchTweets(lastTweetIdInTheList);
+    final tweets = await _fetchTweetsAfter(maxId);
     _tweets = _tweets == null
         ? tweets
         : _tweets.copyWith(
-            _tweets.tweets + tweets.tweets, tweets.containsFirstTweet);
+            _tweets.tweets + tweets.tweets,
+            tweets.containsFirstTweet,
+          );
     loading = false;
     notifyListeners();
   }
 
-  Future<Tweets> _fetchTweets(int lastId) async {
-    return _tweetRepository.fetchTweets(lastId, 10);
+  Future<Tweets> _fetchTweetsAfter(int maxId) async {
+    return _tweetRepository.fetchTweets(maxId, null, 10);
+  }
+
+  Future<Tweets> _fetchTweetsBefore(int minId) async {
+    return _tweetRepository.fetchTweets(null, minId, null);
   }
 }

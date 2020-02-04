@@ -9,11 +9,23 @@ class Api {
 
   final _client = http.Client();
 
-  Future<Tweets> fetchTweets(int lastId, int limit) async {
-    var url = '$_endpoint/tweets?limit=$limit';
-    if (lastId != null) {
-      url += '&last_id=$lastId';
+  Future<Tweets> fetchTweets(int maxId, int minId, int limit) async {
+    var qs = '';
+
+    if (maxId != null) {
+      final s = qs == '' ? '?' : '&';
+      qs += '${s}max_id=$maxId';
     }
+    if (minId != null) {
+      final s = qs == '' ? '?' : '&';
+      qs += '${s}min_id=$minId';
+    }
+    if (limit != null) {
+      final s = qs == '' ? '?' : '&';
+      qs += '${s}max_id=$maxId';
+    }
+
+    final url = '$_endpoint/tweets$qs';
 
     final response = await _client.get(url);
     final tweetsJson = json.decode(response.body);

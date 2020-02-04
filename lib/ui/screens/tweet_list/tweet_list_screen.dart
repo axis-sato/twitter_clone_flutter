@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
@@ -38,16 +40,23 @@ class _TweetListScreenState extends State<TweetListScreen> {
       ),
       body: Consumer<TweetListViewModel>(
         builder: (context, vm, child) {
-          return ListView.builder(
-            itemBuilder: (context, int index) {
-              if (index == vm.tweets.length) {
-                return vm.loading ? _BottomLoader() : Container();
-              }
-              final tweet = vm.tweets[index];
-              return _Tweet(tweet: tweet);
+          return RefreshIndicator(
+            onRefresh: () async {
+              debugPrint('onRefresh');
+              await vm.fetchNewTweets();
+              return null;
             },
-            itemCount: vm.tweets.length + 1,
-            controller: _scrollController,
+            child: ListView.builder(
+              itemBuilder: (context, int index) {
+                if (index == vm.tweets.length) {
+                  return vm.loading ? _BottomLoader() : Container();
+                }
+                final tweet = vm.tweets[index];
+                return _Tweet(tweet: tweet);
+              },
+              itemCount: vm.tweets.length + 1,
+              controller: _scrollController,
+            ),
           );
         },
       ),
@@ -59,7 +68,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       final vm = Provider.of<TweetListViewModel>(context, listen: false);
-      vm.moreTweets();
+      vm.fetchMoreTweets();
     }
   }
 }

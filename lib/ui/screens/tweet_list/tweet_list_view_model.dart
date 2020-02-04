@@ -35,7 +35,9 @@ class TweetListViewModel extends ChangeNotifier {
     }
     loading = true;
     notifyListeners();
-    final tweets = await _fetchTweets(_lastTweetIdInTheList);
+    final lastTweetIdInTheList =
+        _lastTweetIdInTheList == null ? null : _lastTweetIdInTheList - 1;
+    final tweets = await _fetchTweets(lastTweetIdInTheList);
     _tweets = _tweets == null
         ? tweets
         : _tweets.copyWith(

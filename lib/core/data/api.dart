@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 
@@ -13,15 +12,15 @@ class Api {
     var qs = '';
 
     if (maxId != null) {
-      final s = qs == '' ? '?' : '&';
+      final s = _querySeparator(qs);
       qs += '${s}max_id=$maxId';
     }
     if (minId != null) {
-      final s = qs == '' ? '?' : '&';
+      final s = _querySeparator(qs);
       qs += '${s}min_id=$minId';
     }
     if (limit != null) {
-      final s = qs == '' ? '?' : '&';
+      final s = _querySeparator(qs);
       qs += '${s}max_id=$maxId';
     }
 
@@ -30,5 +29,9 @@ class Api {
     final response = await _client.get(url);
     final tweetsJson = json.decode(response.body);
     return Tweets.fromJson(tweetsJson);
+  }
+
+  String _querySeparator(String qs) {
+    return qs == '' ? '?' : '&';
   }
 }

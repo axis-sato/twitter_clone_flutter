@@ -24,7 +24,7 @@ class TweetListViewModel extends ChangeNotifier {
   TweetListViewModel({@required TweetRepository tweetRepository})
       : _tweetRepository = tweetRepository;
 
-  void init() async {
+  Future<void> init() async {
     loading = true;
     notifyListeners();
     _tweets = await _fetchTweetsAfter(null);
@@ -48,7 +48,7 @@ class TweetListViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void fetchMoreTweets() async {
+  Future<void> fetchMoreTweets() async {
     if (loading || hasReachedMax) {
       return;
     }

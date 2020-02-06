@@ -1,13 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
-import 'package:twitter_clone_flutter/core/models/user.dart';
-import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
-import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
+import 'package:twitter_clone_flutter/core/utils/failure.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
+import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class TweetListScreen extends StatefulWidget {
   TweetListScreen({Key key}) : super(key: key);
@@ -23,6 +21,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<TweetListViewModel>(context, listen: false).init();
     _scrollController.addListener(_onScroll);
   }
 
@@ -30,6 +29,14 @@ class _TweetListScreenState extends State<TweetListScreen> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  _showErrorMessage(String message) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+      ),
+    );
   }
 
   @override
@@ -40,24 +47,32 @@ class _TweetListScreenState extends State<TweetListScreen> {
       ),
       body: Consumer<TweetListViewModel>(
         builder: (context, vm, child) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              debugPrint('onRefresh');
-              await vm.fetchNewTweets();
-              return null;
-            },
-            child: ListView.builder(
-              itemBuilder: (context, int index) {
-                if (index == vm.tweets.length) {
-                  return vm.loading ? _BottomLoader() : Container();
-                }
-                final tweet = vm.tweets[index];
-                return _Tweet(tweet: tweet);
-              },
-              itemCount: vm.tweets.length + 1,
-              controller: _scrollController,
-            ),
-          );
+          if (vm.loading) {
+            return Loading();
+          }
+
+          return vm.failure != null && vm.tweets.isEmpty
+              ? _ErrorView(
+                  failure: vm.failure,
+                  onPressed: () => vm.init(),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    await vm.getNewTweets();
+                    return null;
+                  },
+                  child: ListView.builder(
+                    itemBuilder: (context, int index) {
+                      if (index == vm.tweets.length) {
+                        return vm.bottomLoading ? _BottomLoader() : Container();
+                      }
+                      final tweet = vm.tweets[index];
+                      return _Tweet(tweet: tweet);
+                    },
+                    itemCount: vm.tweets.length + 1,
+                    controller: _scrollController,
+                  ),
+                );
         },
       ),
     );
@@ -68,7 +83,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
       final vm = Provider.of<TweetListViewModel>(context, listen: false);
-      vm.fetchMoreTweets();
+      vm.getMoreTweets();
     }
   }
 }
@@ -163,6 +178,33 @@ class _BottomLoader extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  final Failure _failure;
+  final VoidCallback _onPressed;
+
+  const _ErrorView(
+      {@required Failure failure, @required VoidCallback onPressed})
+      : _failure = failure,
+        _onPressed = onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(_failure.message),
+          RaisedButton(
+            child: Text('リロード'),
+            onPressed: _onPressed,
+          )
+        ],
       ),
     );
   }

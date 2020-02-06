@@ -1,77 +1,101 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
-import 'package:twitter_clone_flutter/core/repositories/tweet_repository.dart';
+import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
+import 'package:twitter_clone_flutter/core/utils/failure.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/ViewModel.dart';
 
-class TweetListViewModel extends ChangeNotifier {
-  final TweetRepository _tweetRepository;
+class TweetListViewModel extends ViewModel {
+  final TweetService _tweetService;
+
+  bool _bottomLoading = false;
+  bool get bottomLoading => _bottomLoading;
+  void _setBottomLoading(bool loading) {
+    _bottomLoading = loading;
+//    notifyListeners();
+  }
+
   Tweets _tweets;
-  bool loading = false;
-
   UnmodifiableListView<Tweet> get tweets =>
       UnmodifiableListView(_tweets == null ? [] : _tweets.tweets);
+  void _setTweets(Tweets tweets) {
+    _tweets = tweets;
+    notifyListeners();
+  }
 
-  bool get hasReachedMax =>
+  bool get _hasReachedMax =>
       _tweets == null ? false : _tweets.containsFirstTweet;
-
   int get _firstTweetIdInTheList =>
       _tweets == null ? null : _tweets.tweets.first.id;
-
   int get _lastTweetIdInTheList =>
       _tweets == null ? null : _tweets.tweets.last.id;
 
-  TweetListViewModel({@required TweetRepository tweetRepository})
-      : _tweetRepository = tweetRepository;
-
-  Future<void> init() async {
-    loading = true;
-    notifyListeners();
-    _tweets = await _fetchTweetsAfter(null);
-    loading = false;
+  Failure _failure;
+  Failure get failure => _failure;
+  void _setFailure(Failure failure) {
+    _failure = failure;
     notifyListeners();
   }
 
-  Future<void> fetchNewTweets() async {
-    if (loading) {
+  TweetListViewModel({@required TweetService tweetService})
+      : _tweetService = tweetService;
+
+  void init() async {
+    setLoading(true);
+    await _getTweetsAfter(null);
+    setLoading(false);
+  }
+
+  Future<void> getNewTweets() async {
+    if (bottomLoading) {
       return;
     }
-    loading = true;
-    notifyListeners();
+    _setBottomLoading(true);
     final minId =
         _firstTweetIdInTheList == null ? null : _firstTweetIdInTheList + 1;
-    final tweets = await _fetchTweetsBefore(minId);
-    _tweets = _tweets == null
-        ? tweets
-        : _tweets.copyWith(tweets.tweets + _tweets.tweets, null);
-    loading = false;
-    notifyListeners();
+    await _getTweetsBefore(minId);
+    _setBottomLoading(false);
   }
 
-  Future<void> fetchMoreTweets() async {
-    if (loading || hasReachedMax) {
+  Future<void> getMoreTweets() async {
+    if (bottomLoading || _hasReachedMax) {
       return;
     }
-    loading = true;
-    notifyListeners();
+    _setBottomLoading(true);
     final maxId =
         _lastTweetIdInTheList == null ? null : _lastTweetIdInTheList - 1;
-    final tweets = await _fetchTweetsAfter(maxId);
-    _tweets = _tweets == null
-        ? tweets
-        : _tweets.copyWith(
-            _tweets.tweets + tweets.tweets,
-            tweets.containsFirstTweet,
-          );
-    loading = false;
-    notifyListeners();
+    await _getTweetsAfter(maxId);
+    _setBottomLoading(false);
   }
 
-  Future<Tweets> _fetchTweetsAfter(int maxId) async {
-    return _tweetRepository.fetchTweets(maxId, null, 10);
+  Future<void> _getTweetsAfter(int maxId) async {
+    try {
+      final tweets = await _tweetService.getTweets(maxId, null, 10);
+      _setTweets(
+        _tweets == null
+            ? tweets
+            : _tweets.copyWith(
+                _tweets.tweets + tweets.tweets,
+                tweets.containsFirstTweet,
+              ),
+      );
+    } on Failure catch (f) {
+      _setFailure(f);
+      debugPrint(f.message);
+    }
   }
 
-  Future<Tweets> _fetchTweetsBefore(int minId) async {
-    return _tweetRepository.fetchTweets(null, minId, null);
+  Future<void> _getTweetsBefore(int minId) async {
+    try {
+      final tweets = await _tweetService.getTweets(null, minId, null);
+      _setTweets(
+        _tweets == null
+            ? tweets
+            : _tweets.copyWith(tweets.tweets + _tweets.tweets, null),
+      );
+    } on Failure catch (f) {
+      _setFailure(f);
+      debugPrint(f.message);
+    }
   }
 }

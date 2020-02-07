@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
+import 'package:twitter_clone_flutter/core/models/user.dart';
 
 class Api {
   static const _endpoint = 'http://localhost:1323/api/v1';
@@ -29,6 +30,29 @@ class Api {
     final response = await _client.get(url);
     final tweetsJson = json.decode(response.body);
     return Tweets.fromJson(tweetsJson);
+  }
+
+  Future<Users> fetchUsers(int maxId, int minId, int limit) async {
+    var qs = '';
+
+    if (maxId != null) {
+      final s = _querySeparator(qs);
+      qs += '${s}max_id=$maxId';
+    }
+    if (minId != null) {
+      final s = _querySeparator(qs);
+      qs += '${s}min_id=$minId';
+    }
+    if (limit != null) {
+      final s = _querySeparator(qs);
+      qs += '${s}max_id=$maxId';
+    }
+
+    final url = '$_endpoint/users$qs';
+
+    final response = await _client.get(url);
+    final usersJson = json.decode(response.body);
+    return Users.fromJson(usersJson);
   }
 
   String _querySeparator(String qs) {

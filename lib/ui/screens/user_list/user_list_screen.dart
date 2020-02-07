@@ -1,8 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
+import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
 
-class UserListScreen extends StatelessWidget {
+class UserListScreen extends StatefulWidget {
   UserListScreen({Key key}) : super(key: key);
+
+  @override
+  _UserListScreenState createState() => _UserListScreenState();
+}
+
+class _UserListScreenState extends State<UserListScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<UserListViewModel>(context, listen: false).init();
+  }
 
   final _users = List<User>.generate(100, (int i) {
     return User(

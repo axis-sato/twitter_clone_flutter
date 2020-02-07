@@ -1,3 +1,27 @@
+class Users {
+  final List<User> users;
+  final bool containsFirstUser;
+
+  const Users({this.users, this.containsFirstUser});
+
+  static Users fromJson(dynamic json) {
+    final users = (json['users'] as List<dynamic>)
+        .map((user) => User.fromJson(user))
+        .toList();
+    return Users(
+      users: users,
+      containsFirstUser: json['contains_first_user'],
+    );
+  }
+
+  Users copyWith(List<User> users, bool containsFirstUser) {
+    return Users(
+      users: users ?? this.users,
+      containsFirstUser: containsFirstUser ?? this.containsFirstUser,
+    );
+  }
+}
+
 class User {
   final int id;
   final String name;

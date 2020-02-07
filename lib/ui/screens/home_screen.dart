@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
+import 'package:twitter_clone_flutter/core/services/user_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
-import 'package:twitter_clone_flutter/ui/screens/user_list_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -45,8 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
               key: PageStorageKey<String>('tweet_list'),
             ),
           ),
-          UserListScreen(
-            key: PageStorageKey<String>('user_list'),
+          ChangeNotifierProvider(
+            create: (context) => UserListViewModel(
+                userService: Provider.of<UserService>(context, listen: false)),
+            child: UserListScreen(
+              key: PageStorageKey<String>('user_list'),
+            ),
           ),
         ],
       ),

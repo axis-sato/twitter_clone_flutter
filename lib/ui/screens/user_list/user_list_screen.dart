@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
+import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class UserListScreen extends StatefulWidget {
   UserListScreen({Key key}) : super(key: key);
@@ -17,33 +18,29 @@ class _UserListScreenState extends State<UserListScreen> {
     Provider.of<UserListViewModel>(context, listen: false).init();
   }
 
-  final _users = List<User>.generate(100, (int i) {
-    return User(
-      id: i + 1,
-      name: "ユーザ${i + 1}",
-      icon: "assets/images/user${(i % 2) + 1}.png",
-      profile: "ユーザ${i + 1}です。",
-      isFollower: i % 2 == 1,
-      followerCount: i,
-    );
-  });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('ユーザ'),
       ),
-      body: ListView.separated(
-        separatorBuilder: (context, int i) => Divider(
-          color: Colors.black,
-        ),
-        itemBuilder: (context, int i) {
-          return _User(
-            user: _users[i],
+      body: Consumer<UserListViewModel>(
+        builder: (context, vm, child) {
+          if (vm.loading) {
+            return Loading();
+          }
+          return ListView.separated(
+            separatorBuilder: (context, int i) => Divider(
+              color: Colors.black,
+            ),
+            itemBuilder: (context, int i) {
+              return _User(
+                user: vm.users[i],
+              );
+            },
+            itemCount: vm.users.length,
           );
         },
-        itemCount: _users.length,
       ),
     );
   }
@@ -63,7 +60,7 @@ class _User extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Image.asset(
+          Image.network(
             _user.icon,
             height: 50,
             width: 50,
@@ -94,7 +91,7 @@ class _User extends StatelessWidget {
                   height: 5,
                 ),
                 Text(
-                  "フォロワー ${_user.followerCount}人",
+                  "フォロワー ${_user.followeeCount}人",
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey,

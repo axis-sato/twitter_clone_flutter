@@ -28,7 +28,7 @@ class User {
   final String icon;
   final String profile;
   final bool isFollower;
-  final int followerCount;
+  final int followeeCount;
 
   const User({
     this.id,
@@ -36,7 +36,7 @@ class User {
     this.icon,
     this.profile,
     this.isFollower,
-    this.followerCount,
+    this.followeeCount,
   });
 
   static User fromJson(dynamic json) {
@@ -46,7 +46,7 @@ class User {
       icon: json['icon'],
       profile: json['profile'],
       isFollower: json['is_follower'],
-      followerCount: json['follower_count'],
+      followeeCount: json['followee_count'],
     );
   }
 }

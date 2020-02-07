@@ -8,7 +8,7 @@ import 'package:twitter_clone_flutter/core/utils/failure.dart';
 class UserService {
   Api api;
 
-  Future<Users> getTweets(int maxId, int minId, int limit) async {
+  Future<Users> getUsers(int maxId, int minId, int limit) async {
     try {
       return await api.fetchUsers(maxId, minId, limit);
     } on SocketException {

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
+import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class UserListScreen extends StatefulWidget {
@@ -40,21 +41,32 @@ class _UserListScreenState extends State<UserListScreen> {
           if (vm.loading) {
             return Loading();
           }
-          return ListView.separated(
-            separatorBuilder: (context, int i) => Divider(
-              color: Colors.black,
-            ),
-            itemBuilder: (context, int i) {
-              if (i == vm.users.length) {
-                return vm.bottomLoading ? BottomLoader() : Container();
-              }
-              return _User(
-                user: vm.users[i],
-              );
-            },
-            itemCount: vm.users.length + 1,
-            controller: _scrollController,
-          );
+          return vm.failure != null && vm.users.isEmpty
+              ? ErrorView(
+                  failure: vm.failure,
+                  onPressed: () => vm.init(),
+                )
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    await vm.getNewUsers();
+                    return null;
+                  },
+                  child: ListView.separated(
+                    separatorBuilder: (context, int i) => Divider(
+                      color: Colors.black,
+                    ),
+                    itemBuilder: (context, int i) {
+                      if (i == vm.users.length) {
+                        return vm.bottomLoading ? BottomLoader() : Container();
+                      }
+                      return _User(
+                        user: vm.users[i],
+                      );
+                    },
+                    itemCount: vm.users.length + 1,
+                    controller: _scrollController,
+                  ),
+                );
         },
       ),
     );

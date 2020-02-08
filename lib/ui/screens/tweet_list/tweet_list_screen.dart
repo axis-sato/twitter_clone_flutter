@@ -5,6 +5,7 @@ import 'package:twitter_clone_flutter/core/utils/failure.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
+import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
@@ -53,7 +54,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
           }
 
           return vm.failure != null && vm.tweets.isEmpty
-              ? _ErrorView(
+              ? ErrorView(
                   failure: vm.failure,
                   onPressed: () => vm.init(),
                 )
@@ -160,32 +161,5 @@ class _Tweet extends StatelessWidget {
       return '${duration.inMinutes}分';
     }
     return '${duration.inSeconds}秒';
-  }
-}
-
-class _ErrorView extends StatelessWidget {
-  final Failure _failure;
-  final VoidCallback _onPressed;
-
-  const _ErrorView(
-      {@required Failure failure, @required VoidCallback onPressed})
-      : _failure = failure,
-        _onPressed = onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(_failure.message),
-          RaisedButton(
-            child: Text('リロード'),
-            onPressed: _onPressed,
-          )
-        ],
-      ),
-    );
   }
 }

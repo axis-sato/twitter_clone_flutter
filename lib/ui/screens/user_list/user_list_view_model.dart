@@ -46,7 +46,7 @@ class UserListViewModel extends ViewModel {
   }
 
   Future<void> getNewUsers() async {
-    if (bottomLoading) {
+    if (loading || bottomLoading) {
       return;
     }
     _setBottomLoading(true);
@@ -57,7 +57,7 @@ class UserListViewModel extends ViewModel {
   }
 
   Future<void> getMoreUsers() async {
-    if (bottomLoading || _hasReachedMax) {
+    if (loading || bottomLoading || _hasReachedMax) {
       return;
     }
     _setBottomLoading(true);

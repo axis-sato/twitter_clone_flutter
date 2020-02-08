@@ -47,7 +47,7 @@ class TweetListViewModel extends ViewModel {
   }
 
   Future<void> getNewTweets() async {
-    if (bottomLoading) {
+    if (loading || bottomLoading) {
       return;
     }
     _setBottomLoading(true);
@@ -58,7 +58,7 @@ class TweetListViewModel extends ViewModel {
   }
 
   Future<void> getMoreTweets() async {
-    if (bottomLoading || _hasReachedMax) {
+    if (loading || bottomLoading || _hasReachedMax) {
       return;
     }
     _setBottomLoading(true);

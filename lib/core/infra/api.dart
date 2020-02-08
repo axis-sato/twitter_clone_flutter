@@ -22,7 +22,7 @@ class Api {
     }
     if (limit != null) {
       final s = _querySeparator(qs);
-      qs += '${s}max_id=$maxId';
+      qs += '${s}limit=$limit';
     }
 
     final url = '$_endpoint/tweets$qs';
@@ -45,7 +45,7 @@ class Api {
     }
     if (limit != null) {
       final s = _querySeparator(qs);
-      qs += '${s}max_id=$maxId';
+      qs += '${s}limit=$limit';
     }
 
     final url = '$_endpoint/users$qs';

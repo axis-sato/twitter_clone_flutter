@@ -4,6 +4,7 @@ import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/utils/failure.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
@@ -64,7 +65,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
                   child: ListView.builder(
                     itemBuilder: (context, int index) {
                       if (index == vm.tweets.length) {
-                        return vm.bottomLoading ? _BottomLoader() : Container();
+                        return vm.bottomLoading ? BottomLoader() : Container();
                       }
                       final tweet = vm.tweets[index];
                       return _Tweet(tweet: tweet);
@@ -159,27 +160,6 @@ class _Tweet extends StatelessWidget {
       return '${duration.inMinutes}分';
     }
     return '${duration.inSeconds}秒';
-  }
-}
-
-class _BottomLoader extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Center(
-          child: SizedBox(
-            width: 33,
-            height: 33,
-            child: CircularProgressIndicator(
-              strokeWidth: 1.5,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 

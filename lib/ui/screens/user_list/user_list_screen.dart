@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
+import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class UserListScreen extends StatefulWidget {
@@ -12,10 +13,20 @@ class UserListScreen extends StatefulWidget {
 }
 
 class _UserListScreenState extends State<UserListScreen> {
+  final _scrollController = ScrollController();
+  final _scrollThreshold = 100.0;
+
   @override
   void initState() {
     super.initState();
     Provider.of<UserListViewModel>(context, listen: false).init();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -34,15 +45,28 @@ class _UserListScreenState extends State<UserListScreen> {
               color: Colors.black,
             ),
             itemBuilder: (context, int i) {
+              if (i == vm.users.length) {
+                return vm.bottomLoading ? BottomLoader() : Container();
+              }
               return _User(
                 user: vm.users[i],
               );
             },
-            itemCount: vm.users.length,
+            itemCount: vm.users.length + 1,
+            controller: _scrollController,
           );
         },
       ),
     );
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll - currentScroll <= _scrollThreshold) {
+      final vm = Provider.of<UserListViewModel>(context, listen: false);
+      vm.getMoreUsers();
+    }
   }
 }
 

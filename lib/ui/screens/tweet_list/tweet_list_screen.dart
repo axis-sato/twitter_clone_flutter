@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
-import 'package:twitter_clone_flutter/core/utils/failure.dart';
+import 'package:twitter_clone_flutter/ui/screens/post_tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
@@ -76,6 +76,17 @@ class _TweetListScreenState extends State<TweetListScreen> {
                   ),
                 );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PostTweetScreen(),
+            fullscreenDialog: true,
+          ),
+        ),
+        tooltip: 'ツイート',
+        child: const Icon(Icons.add),
       ),
     );
   }

@@ -34,6 +34,9 @@ class MyApp extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
+            iconTheme: IconThemeData(
+              color: Colors.lightBlue,
+            ),
           ),
         ),
         home: HomeScreen(),

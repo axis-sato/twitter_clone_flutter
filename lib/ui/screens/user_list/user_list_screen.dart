@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
+import 'package:twitter_clone_flutter/core/services/user_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class UserListScreen extends StatefulWidget {
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => UserListViewModel(
+          userService: Provider.of<UserService>(context, listen: false)),
+      child: UserListScreen(
+        key: PageStorageKey<String>('user_list'),
+      ),
+    );
+  }
+
   UserListScreen({Key key}) : super(key: key);
 
   @override

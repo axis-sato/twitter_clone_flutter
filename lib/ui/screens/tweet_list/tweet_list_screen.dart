@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
+import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/post_tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
@@ -10,6 +11,16 @@ import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class TweetListScreen extends StatefulWidget {
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => TweetListViewModel(
+          tweetService: Provider.of<TweetService>(context, listen: false)),
+      child: TweetListScreen(
+        key: PageStorageKey<String>('tweet_list'),
+      ),
+    );
+  }
+
   TweetListScreen({Key key}) : super(key: key);
 
   @override

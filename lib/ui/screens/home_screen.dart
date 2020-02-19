@@ -39,21 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
           });
         },
         children: <Widget>[
-          ChangeNotifierProvider(
-            create: (context) => TweetListViewModel(
-                tweetService:
-                    Provider.of<TweetService>(context, listen: false)),
-            child: TweetListScreen(
-              key: PageStorageKey<String>('tweet_list'),
-            ),
-          ),
-          ChangeNotifierProvider(
-            create: (context) => UserListViewModel(
-                userService: Provider.of<UserService>(context, listen: false)),
-            child: UserListScreen(
-              key: PageStorageKey<String>('user_list'),
-            ),
-          ),
+          TweetListScreen.create(context),
+          UserListScreen.create(context),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

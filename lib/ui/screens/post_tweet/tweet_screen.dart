@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
+import 'package:twitter_clone_flutter/ui/screens/post_tweet/post_tweet_view_model.dart';
 
 class PostTweetScreen extends StatefulWidget {
+  static Widget create(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => PostTweetViewModel(
+        tweetService: Provider.of<TweetService>(context, listen: false),
+      ),
+      child: PostTweetScreen(),
+    );
+  }
+
   @override
   _PostTweetScreenState createState() => _PostTweetScreenState();
 }
@@ -17,43 +29,44 @@ class _PostTweetScreenState extends State<PostTweetScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('ツイート'),
-          actions: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: _TweetButton(
-                isActive: _tweetable,
-                onPressed: () => print(_textEditingController.text),
-              ),
-            )
-          ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('ツイート'),
+        actions: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: _TweetButton(
+              isActive: _tweetable,
+              onPressed: () {
+                Provider.of<PostTweetViewModel>(context, listen: false)
+                    .postTweet(_textEditingController.text);
+              },
+            ),
+          )
+        ],
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(
+          vertical: 5,
+          horizontal: 20,
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 5,
-            horizontal: 20,
+        child: TextField(
+          controller: _textEditingController,
+          onChanged: (text) {
+            setState(() {
+              _tweetable = _textEditingController.text.isNotEmpty;
+            });
+          },
+          autofocus: true,
+          style: TextStyle(
+            fontSize: 20,
           ),
-          child: TextField(
-            controller: _textEditingController,
-            onChanged: (text) {
-              setState(() {
-                _tweetable = _textEditingController.text.isNotEmpty;
-              });
-            },
-            autofocus: true,
-            style: TextStyle(
-              fontSize: 20,
-            ),
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: 'いまどうしてる？',
-            ),
-            maxLength: 140,
-            maxLines: null,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'いまどうしてる？',
           ),
+          maxLength: 140,
+          maxLines: null,
         ),
       ),
     );

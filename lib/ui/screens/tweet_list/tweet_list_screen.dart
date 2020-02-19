@@ -81,7 +81,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
         onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => PostTweetScreen(),
+            builder: (context) => PostTweetScreen.create(context),
             fullscreenDialog: true,
           ),
         ),

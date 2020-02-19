@@ -8,8 +8,8 @@ class PostTweetViewModel extends ViewModel {
   PostTweetViewModel({@required TweetService tweetService})
       : _tweetService = tweetService;
 
-  void postTweet(String tweet) {
-    print('ツイート投稿: $tweet');
-    // TODO: ツイート投稿
+  void postTweet(String tweet) async {
+    final t = await _tweetService.postTweet(tweet);
+    print(t);
   }
 }

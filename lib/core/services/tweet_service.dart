@@ -22,4 +22,18 @@ class TweetService {
       throw Failure('Bad response format.');
     }
   }
+
+  Future<Tweet> postTweet(String tweet) async {
+    try {
+      return await api.postTweet(tweet);
+    } on SocketException {
+      throw Failure('ネットワークに接続できませんでした。');
+    } on ClientException {
+      throw Failure('ネットワークに接続できませんでした。');
+    } on HttpException {
+      throw Failure('ツイートの取得に失敗しました。');
+    } on FormatException {
+      throw Failure('Bad response format.');
+    }
+  }
 }

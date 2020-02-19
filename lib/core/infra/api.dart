@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 
@@ -32,6 +33,14 @@ class Api {
     return Tweets.fromJson(tweetsJson);
   }
 
+  Future<Tweet> postTweet(String tweet) async {
+    final url = '$_endpoint/tweets';
+    final body = {'tweet': tweet};
+    final response = await _postJson(url, body: body);
+    final tweetJson = json.decode(response.body);
+    return Tweet.fromJson(tweetJson);
+  }
+
   Future<Users> fetchUsers(int maxId, int minId, int limit) async {
     var qs = '';
 
@@ -57,5 +66,13 @@ class Api {
 
   String _querySeparator(String qs) {
     return qs == '' ? '?' : '&';
+  }
+
+  Future<Response> _postJson(url, {Object body}) {
+    return _client.post(
+      url,
+      body: json.encode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
   }
 }

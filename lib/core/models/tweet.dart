@@ -52,4 +52,8 @@ class Tweet {
       isLiked: json['is_liked'],
     );
   }
+
+  @override
+  String toString() =>
+      '{id: $id, tweet: $tweet, createdAt: $createdAt, user: $user, like: $like, isLiked: $isLiked }';
 }

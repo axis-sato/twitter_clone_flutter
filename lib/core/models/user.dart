@@ -49,4 +49,8 @@ class User {
       followeeCount: json['followee_count'],
     );
   }
+
+  @override
+  String toString() =>
+      '{id: $id, name: $name, icon: $icon, profile: $profile, isFollower: $isFollower, followeeCount: $followeeCount }';
 }

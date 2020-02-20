@@ -37,9 +37,11 @@ class _PostTweetScreenState extends State<PostTweetScreen> {
             padding: EdgeInsets.all(10),
             child: _TweetButton(
               isActive: _tweetable,
-              onPressed: () {
-                Provider.of<PostTweetViewModel>(context, listen: false)
+              onPressed: () async {
+                final tweet = await Provider.of<PostTweetViewModel>(context,
+                        listen: false)
                     .postTweet(_textEditingController.text);
+                Navigator.pop(context, tweet);
               },
             ),
           )

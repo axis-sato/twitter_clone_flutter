@@ -89,13 +89,18 @@ class _TweetListScreenState extends State<TweetListScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => PostTweetScreen.create(context),
-            fullscreenDialog: true,
-          ),
-        ),
+        onPressed: () async {
+          final tweet = await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => PostTweetScreen.create(context),
+              fullscreenDialog: true,
+            ),
+          );
+
+          Provider.of<TweetListViewModel>(context, listen: false)
+              .unshiftTweet(tweet);
+        },
         tooltip: 'ツイート',
         child: const Icon(Icons.add),
       ),
@@ -159,7 +164,7 @@ class _Tweet extends StatelessWidget {
             ],
           ),
         ),
-        onTap: () => Navigator.push(
+        onTap: () => Navigator.push<Tweet>(
           context,
           MaterialPageRoute(
             builder: (context) => TweetScreen(

@@ -75,8 +75,8 @@ class TweetListViewModel extends ViewModel {
         _tweets == null
             ? tweets
             : _tweets.copyWith(
-                _tweets.tweets + tweets.tweets,
-                tweets.containsFirstTweet,
+                tweets: _tweets.tweets + tweets.tweets,
+                containsFirstTweet: tweets.containsFirstTweet,
               ),
       );
     } on Failure catch (f) {
@@ -91,11 +91,22 @@ class TweetListViewModel extends ViewModel {
       _setTweets(
         _tweets == null
             ? tweets
-            : _tweets.copyWith(tweets.tweets + _tweets.tweets, null),
+            : _tweets.copyWith(tweets: tweets.tweets + _tweets.tweets),
       );
     } on Failure catch (f) {
       _setFailure(f);
       debugPrint(f.message);
     }
+  }
+
+  void unshiftTweet(Tweet tweet) {
+    _setTweets(
+      _tweets == null
+          ? [tweet]
+          : _tweets.copyWith(
+              tweets: [tweet] + _tweets.tweets,
+            ),
+    );
+    notifyListeners();
   }
 }

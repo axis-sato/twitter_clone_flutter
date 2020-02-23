@@ -156,7 +156,19 @@ class _Tweet extends StatelessWidget {
                     Text(_tweet.tweet),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Like(like: _tweet.like, isLiked: _tweet.isLiked),
+                      child: Like(
+                        like: _tweet.like,
+                        isLiked: _tweet.isLiked,
+                        onPressed: (isLike) {
+                          final vm = Provider.of<TweetListViewModel>(context,
+                              listen: false);
+                          if (isLike) {
+                            vm.unlike(_tweet.id);
+                          } else {
+                            vm.like(_tweet.id);
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

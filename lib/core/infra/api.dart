@@ -41,6 +41,20 @@ class Api {
     return Tweet.fromJson(tweetJson);
   }
 
+  Future<Tweet> like(int tweetId) async {
+    final url = '$_endpoint/tweets/$tweetId/like';
+    final response = await _putJson(url);
+    final tweetJson = json.decode(response.body);
+    return Tweet.fromJson(tweetJson);
+  }
+
+  Future<Tweet> unlike(int tweetId) async {
+    final url = '$_endpoint/tweets/$tweetId/unlike';
+    final response = await _putJson(url);
+    final tweetJson = json.decode(response.body);
+    return Tweet.fromJson(tweetJson);
+  }
+
   Future<Users> fetchUsers(int maxId, int minId, int limit) async {
     var qs = '';
 
@@ -70,6 +84,14 @@ class Api {
 
   Future<Response> _postJson(url, {Object body}) {
     return _client.post(
+      url,
+      body: json.encode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+  }
+
+  Future<Response> _putJson(url, {Object body}) {
+    return _client.put(
       url,
       body: json.encode(body),
       headers: {'Content-Type': 'application/json'},

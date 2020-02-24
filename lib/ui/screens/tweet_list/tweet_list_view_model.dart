@@ -111,15 +111,15 @@ class TweetListViewModel extends ViewModel {
 
   void like(int tweetId) async {
     final tweet = await _tweetService.like(tweetId);
-    _updateTweet(tweet);
+    updateTweet(tweet);
   }
 
   void unlike(int tweetId) async {
     final tweet = await _tweetService.unlike(tweetId);
-    _updateTweet(tweet);
+    updateTweet(tweet);
   }
 
-  void _updateTweet(Tweet tweet) {
+  void updateTweet(Tweet tweet) {
     final tweets = _tweets.tweets.map((t) {
       if (t.id == tweet.id) {
         return tweet;

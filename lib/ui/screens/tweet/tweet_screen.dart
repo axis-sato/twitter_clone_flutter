@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
+import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_view_model.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 import 'package:intl/intl.dart';
 
 class TweetScreen extends StatelessWidget {
-  final Tweet _tweet;
-
-  TweetScreen({Key key, @required tweet})
-      : _tweet = tweet,
-        super(key: key);
+  static Widget create(BuildContext context, Tweet tweet,
+      TweetListViewModel tweetListViewModel) {
+    return ChangeNotifierProvider(
+      create: (context) => TweetViewModel(
+        tweetService: Provider.of<TweetService>(context, listen: false),
+        tweetListViewModel: tweetListViewModel,
+        tweet: tweet,
+      ),
+      child: TweetScreen(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,28 +29,39 @@ class TweetScreen extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _Profile(
-                user: _tweet.user,
-              ),
-              SizedBox(height: 10),
-              _Tweet(
-                tweet: _tweet,
-              ),
-              SizedBox(height: 5),
-              _CreatedAt(
-                dateTime: _tweet.createdAt,
-              ),
-              SizedBox(height: 5),
-              Like(
-                like: _tweet.like,
-                isLiked: _tweet.isLiked,
-                fontSize: 15,
-                iconSize: 20,
-              ),
-            ],
+          child: Consumer<TweetViewModel>(
+            builder: (context, vm, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                _Profile(
+                  user: vm.tweet.user,
+                ),
+                SizedBox(height: 10),
+                _Tweet(
+                  tweet: vm.tweet,
+                ),
+                SizedBox(height: 5),
+                _CreatedAt(
+                  dateTime: vm.tweet.createdAt,
+                ),
+                SizedBox(height: 5),
+                Like(
+                  like: vm.tweet.like,
+                  isLiked: vm.tweet.isLiked,
+                  fontSize: 15,
+                  iconSize: 20,
+                  onPressed: (isLike) {
+                    final vm =
+                        Provider.of<TweetViewModel>(context, listen: false);
+                    if (isLike) {
+                      vm.unlike(vm.tweet.id);
+                    } else {
+                      vm.like(vm.tweet.id);
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
         ));
   }

@@ -4,7 +4,7 @@ import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/post_tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
-import 'package:twitter_clone_flutter/ui/screens/tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
@@ -128,63 +128,67 @@ class _Tweet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: InkWell(
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Image.network(
-                _tweet.user.icon,
-                height: 50,
-                width: 50,
-              ),
-              SizedBox(width: 10),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Text(_tweet.user.name),
-                        SizedBox(width: 5),
-                        Text(
-                          _duration(from: _tweet.createdAt),
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Text(_tweet.tweet),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Like(
-                        like: _tweet.like,
-                        isLiked: _tweet.isLiked,
-                        onPressed: (isLike) {
-                          final vm = Provider.of<TweetListViewModel>(context,
-                              listen: false);
-                          if (isLike) {
-                            vm.unlike(_tweet.id);
-                          } else {
-                            vm.like(_tweet.id);
-                          }
-                        },
-                      ),
-                    ),
-                  ],
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Image.network(
+                  _tweet.user.icon,
+                  height: 50,
+                  width: 50,
                 ),
-              )
-            ],
-          ),
-        ),
-        onTap: () => Navigator.push<Tweet>(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TweetScreen(
-              tweet: _tweet,
+                SizedBox(width: 10),
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Text(_tweet.user.name),
+                          SizedBox(width: 5),
+                          Text(
+                            _duration(from: _tweet.createdAt),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      Text(_tweet.tweet),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Like(
+                          like: _tweet.like,
+                          isLiked: _tweet.isLiked,
+                          onPressed: (isLike) {
+                            final vm = Provider.of<TweetListViewModel>(context,
+                                listen: false);
+                            if (isLike) {
+                              vm.unlike(_tweet.id);
+                            } else {
+                              vm.like(_tweet.id);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
             ),
           ),
-        ),
-      ),
+          onTap: () {
+            final vm = Provider.of<TweetListViewModel>(context, listen: false);
+            Navigator.push<Tweet>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TweetScreen.create(
+                  context,
+                  _tweet,
+                  vm,
+                ),
+              ),
+            );
+          }),
     );
   }
 

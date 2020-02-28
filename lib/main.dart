@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
 import 'package:twitter_clone_flutter/provider_setup.dart';
-import 'package:twitter_clone_flutter/ui/screens/home_screen.dart';
+import 'package:twitter_clone_flutter/ui/router.dart';
 
 void main() => runApp(MyApp());
 
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        home: HomeScreen(),
+        initialRoute: RoutePaths.Home,
+        onGenerateRoute: Router.generateRoute,
       ),
     );
   }

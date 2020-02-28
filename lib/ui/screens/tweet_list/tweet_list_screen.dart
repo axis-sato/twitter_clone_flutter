@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
-import 'package:twitter_clone_flutter/ui/screens/post_tweet/tweet_screen.dart';
+import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
+import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen_arguments.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
-import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
@@ -90,16 +90,15 @@ class _TweetListScreenState extends State<TweetListScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          final tweet = await Navigator.push(
+          final tweet = await Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => PostTweetScreen.create(context),
-              fullscreenDialog: true,
-            ),
+            RoutePaths.PostTweet,
           );
 
-          Provider.of<TweetListViewModel>(context, listen: false)
-              .unshiftTweet(tweet);
+          if (tweet is Tweet) {
+            Provider.of<TweetListViewModel>(context, listen: false)
+                .unshiftTweet(tweet);
+          }
         },
         tooltip: 'ツイート',
         child: const Icon(Icons.add),
@@ -178,15 +177,11 @@ class _Tweet extends StatelessWidget {
           ),
           onTap: () {
             final vm = Provider.of<TweetListViewModel>(context, listen: false);
-            Navigator.push<Tweet>(
+
+            Navigator.pushNamed(
               context,
-              MaterialPageRoute(
-                builder: (context) => TweetScreen.create(
-                  context,
-                  _tweet,
-                  vm,
-                ),
-              ),
+              RoutePaths.Tweet,
+              arguments: TweetScreenArguments(_tweet, vm),
             );
           }),
     );

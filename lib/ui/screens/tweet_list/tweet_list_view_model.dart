@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/core/utils/failure.dart';
-import 'package:twitter_clone_flutter/ui/viewmodels/ViewModel.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/view_model.dart';
 
 class TweetListViewModel extends ViewModel {
   final TweetService _tweetService;

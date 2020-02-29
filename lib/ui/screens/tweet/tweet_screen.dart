@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
-import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_view_model.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
-import 'package:intl/intl.dart';
 
 class TweetScreen extends StatelessWidget {
   static Widget create(BuildContext context, Tweet tweet,
       TweetListViewModel tweetListViewModel) {
     return ChangeNotifierProvider(
       create: (context) => TweetViewModel(
-        tweetService: Provider.of<TweetService>(context, listen: false),
+        tweetService: Provider.of(context, listen: false),
         tweetListViewModel: tweetListViewModel,
         tweet: tweet,
       ),

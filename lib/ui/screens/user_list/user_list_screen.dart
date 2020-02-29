@@ -3,9 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/core/services/user_service.dart';
 import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_view_model.dart';
-import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
+import 'package:twitter_clone_flutter/ui/widgets/loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
-import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class UserListScreen extends StatefulWidget {
   static Widget create(BuildContext context) {
@@ -50,7 +49,7 @@ class _UserListScreenState extends State<UserListScreen> {
       body: Consumer<UserListViewModel>(
         builder: (context, vm, child) {
           if (vm.loading) {
-            return Loading();
+            return Loader();
           }
           return vm.failure != null && vm.users.isEmpty
               ? ErrorView(
@@ -68,7 +67,7 @@ class _UserListScreenState extends State<UserListScreen> {
                     ),
                     itemBuilder: (context, int i) {
                       if (i == vm.users.length) {
-                        return vm.bottomLoading ? BottomLoader() : Container();
+                        return vm.bottomLoading ? Loader() : Container();
                       }
                       return _User(
                         user: vm.users[i],

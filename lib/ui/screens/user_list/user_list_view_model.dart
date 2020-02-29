@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 import 'package:twitter_clone_flutter/core/services/user_service.dart';
 import 'package:twitter_clone_flutter/core/utils/failure.dart';
-import 'package:twitter_clone_flutter/ui/viewmodels/ViewModel.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/view_model.dart';
 
 class UserListViewModel extends ViewModel {
   final UserService _userService;

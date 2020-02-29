@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
-import 'package:twitter_clone_flutter/ui/viewmodels/ViewModel.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/view_model.dart';
 
 class PostTweetViewModel extends ViewModel {
   final TweetService _tweetService;

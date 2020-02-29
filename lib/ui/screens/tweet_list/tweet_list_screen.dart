@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
-import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen_arguments.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
-import 'package:twitter_clone_flutter/ui/widgets/bottom_loader.dart';
+import 'package:twitter_clone_flutter/ui/widgets/loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
-import 'package:twitter_clone_flutter/ui/widgets/loading.dart';
 
 class TweetListScreen extends StatefulWidget {
   static Widget create(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => TweetListViewModel(
-          tweetService: Provider.of<TweetService>(context, listen: false)),
+      create: (context) =>
+          TweetListViewModel(tweetService: Provider.of(context, listen: false)),
       child: TweetListScreen(
         key: PageStorageKey<String>('tweet_list'),
       ),
@@ -61,7 +59,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
       body: Consumer<TweetListViewModel>(
         builder: (context, vm, child) {
           if (vm.loading) {
-            return Loading();
+            return Loader();
           }
 
           return vm.failure != null && vm.tweets.isEmpty
@@ -77,7 +75,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
                   child: ListView.builder(
                     itemBuilder: (context, int index) {
                       if (index == vm.tweets.length) {
-                        return vm.bottomLoading ? BottomLoader() : Container();
+                        return vm.bottomLoading ? Loader() : Container();
                       }
                       final tweet = vm.tweets[index];
                       return _Tweet(tweet: tweet);

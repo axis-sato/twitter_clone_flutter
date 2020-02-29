@@ -4,6 +4,7 @@ import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen_arguments.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_view_model.dart';
+import 'package:twitter_clone_flutter/ui/viewmodels/tweet_model.dart';
 import 'package:twitter_clone_flutter/ui/widgets/loader.dart';
 import 'package:twitter_clone_flutter/ui/widgets/error_view.dart';
 import 'package:twitter_clone_flutter/ui/widgets/like.dart';
@@ -78,7 +79,7 @@ class _TweetListScreenState extends State<TweetListScreen> {
                         return vm.bottomLoading ? Loader() : Container();
                       }
                       final tweet = vm.tweets[index];
-                      return _Tweet(tweet: tweet);
+                      return _Tweet.create(context, tweet);
                     },
                     itemCount: vm.tweets.length + 1,
                     controller: _scrollController,
@@ -115,73 +116,78 @@ class _TweetListScreenState extends State<TweetListScreen> {
 }
 
 class _Tweet extends StatelessWidget {
-  final Tweet _tweet;
-
-  _Tweet({Key key, @required tweet})
-      : _tweet = tweet,
-        super(key: key);
+  static Widget create(BuildContext context, Tweet tweet) {
+    return ChangeNotifierProvider(
+      create: (context) => TweetModel(
+        tweetService: Provider.of(context, listen: false),
+        tweet: tweet,
+      ),
+      child: _Tweet(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Image.network(
-                  _tweet.user.icon,
-                  height: 50,
-                  width: 50,
-                ),
-                SizedBox(width: 10),
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(_tweet.user.name),
-                          SizedBox(width: 5),
-                          Text(
-                            _duration(from: _tweet.createdAt),
-                            style: TextStyle(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      Text(_tweet.tweet),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Like(
-                          like: _tweet.like,
-                          isLiked: _tweet.isLiked,
-                          onPressed: (isLike) {
-                            final vm = Provider.of<TweetListViewModel>(context,
-                                listen: false);
-                            if (isLike) {
-                              vm.unlike(_tweet.id);
-                            } else {
-                              vm.like(_tweet.id);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
+    return Consumer<TweetModel>(
+      builder: (context, vm, child) => Card(
+        child: InkWell(
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Image.network(
+                    vm.tweet.user.icon,
+                    height: 50,
+                    width: 50,
                   ),
-                )
-              ],
+                  SizedBox(width: 10),
+                  Flexible(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Text(vm.tweet.user.name),
+                            SizedBox(width: 5),
+                            Text(
+                              _duration(from: vm.tweet.createdAt),
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
+                        Text(vm.tweet.tweet),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: Like(
+                            like: vm.tweet.like,
+                            isLiked: vm.tweet.isLiked,
+                            onPressed: (isLike) {
+                              if (isLike) {
+                                vm.unlike(vm.tweet.id);
+                              } else {
+                                vm.like(vm.tweet.id);
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-          onTap: () {
-            final vm = Provider.of<TweetListViewModel>(context, listen: false);
-
-            Navigator.pushNamed(
-              context,
-              RoutePaths.Tweet,
-              arguments: TweetScreenArguments(_tweet, vm),
-            );
-          }),
+            onTap: () {
+              Navigator.pushNamed(
+                context,
+                RoutePaths.Tweet,
+                arguments: TweetScreenArguments(
+                  vm.tweet,
+                  Provider.of(context, listen: false),
+                ),
+              );
+            }),
+      ),
     );
   }
 

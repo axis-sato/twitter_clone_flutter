@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
 import 'package:twitter_clone_flutter/ui/screens/home_screen.dart';
-import 'package:twitter_clone_flutter/ui/screens/post_tweet/tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/post_tweet/post_tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen_arguments.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_screen.dart';

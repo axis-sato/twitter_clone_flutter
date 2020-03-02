@@ -12,7 +12,7 @@ class TweetListViewModel extends ViewModel {
   bool get bottomLoading => _bottomLoading;
   void _setBottomLoading(bool loading) {
     _bottomLoading = loading;
-//    notifyListeners();
+    notifyListeners();
   }
 
   Tweets _tweets;

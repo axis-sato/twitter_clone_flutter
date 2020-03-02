@@ -33,8 +33,8 @@ class _TweetListScreenState extends State<TweetListScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<TweetListViewModel>(context, listen: false).init();
     _scrollController.addListener(_onScroll);
+    Provider.of<TweetListViewModel>(context, listen: false).init();
   }
 
   @override

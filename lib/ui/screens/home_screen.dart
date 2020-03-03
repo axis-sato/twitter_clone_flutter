@@ -9,30 +9,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _index = 0;
-  PageController _pageController;
-
-  @override
-  void initState() {
-    super.initState();
-    _pageController = PageController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _pageController.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (int index) {
-          setState(() {
-            this._index = index;
-          });
-        },
+      body: IndexedStack(
+        index: _index,
         children: <Widget>[
           TweetListScreen.create(context),
           UserListScreen.create(context),
@@ -40,11 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         onTap: (int index) {
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 10),
-            curve: Curves.ease,
-          );
+          setState(() {
+            _index = index;
+          });
         },
         currentIndex: _index,
         items: [

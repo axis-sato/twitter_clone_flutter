@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 class Users {
   final List<User> users;
   final bool containsFirstUser;
@@ -22,7 +24,7 @@ class Users {
   }
 }
 
-class User {
+class User extends Equatable {
   final int id;
   final String name;
   final String icon;
@@ -53,4 +55,7 @@ class User {
   @override
   String toString() =>
       '{id: $id, name: $name, icon: $icon, profile: $profile, isFollower: $isFollower, followeeCount: $followeeCount }';
+
+  @override
+  List<Object> get props => ['id'];
 }

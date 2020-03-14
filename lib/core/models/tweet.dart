@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 
 class Tweets {
@@ -24,7 +25,7 @@ class Tweets {
   }
 }
 
-class Tweet {
+class Tweet extends Equatable {
   final int id;
   final String tweet;
   final DateTime createdAt;
@@ -56,4 +57,7 @@ class Tweet {
   @override
   String toString() =>
       '{id: $id, tweet: $tweet, createdAt: $createdAt, user: $user, like: $like, isLiked: $isLiked }';
+
+  @override
+  List<Object> get props => ['id'];
 }

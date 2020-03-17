@@ -6,9 +6,11 @@ import 'package:twitter_clone_flutter/core/models/tweet.dart';
 import 'package:twitter_clone_flutter/core/models/user.dart';
 
 class Api {
-  static const _endpoint = 'http://localhost:1323/api/v1';
-
+  final String _endpoint;
   final _client = http.Client();
+
+  Api({String endpoint = 'http://localhost:1323/api/v1'})
+      : _endpoint = endpoint;
 
   Future<Tweets> fetchTweets(int maxId, int minId, int limit) async {
     var qs = '';

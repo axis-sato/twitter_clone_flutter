@@ -1,12 +1,14 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:twitter_clone_flutter/core/models/tweet.dart';
+import 'package:twitter_clone_flutter/core/services/authentication_service.dart';
 import 'package:twitter_clone_flutter/core/services/tweet_service.dart';
 import 'package:twitter_clone_flutter/core/utils/failure.dart';
 import 'package:twitter_clone_flutter/ui/viewmodels/view_model.dart';
 
 class TweetListViewModel extends ViewModel {
   final TweetService _tweetService;
+  final AuthenticationService _authenticationService;
 
   bool _bottomLoading = false;
   bool get bottomLoading => _bottomLoading;
@@ -37,8 +39,11 @@ class TweetListViewModel extends ViewModel {
     notifyListeners();
   }
 
-  TweetListViewModel({@required TweetService tweetService})
-      : _tweetService = tweetService;
+  TweetListViewModel(
+      {@required TweetService tweetService,
+      @required AuthenticationService authenticationService})
+      : _tweetService = tweetService,
+        _authenticationService = authenticationService;
 
   void init() async {
     setLoading(true);
@@ -107,5 +112,9 @@ class TweetListViewModel extends ViewModel {
               tweets: [tweet] + _tweets.tweets,
             ),
     );
+  }
+
+  Future<void> signOut() {
+    return _authenticationService.signOut();
   }
 }

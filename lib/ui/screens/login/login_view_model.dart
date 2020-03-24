@@ -9,8 +9,6 @@ class LoginViewModel extends ViewModel {
   LoginViewModel({@required AuthenticationService authenticationService})
       : _authenticationService = authenticationService;
 
-  Future<FirebaseUser> get currentUser => _authenticationService.currentUser;
-
   Future<FirebaseUser> handleSingInWithGoogle() {
     return _authenticationService.signInWithGoogle();
   }

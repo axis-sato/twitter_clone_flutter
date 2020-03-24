@@ -16,5 +16,9 @@ class AuthenticationService {
     return user;
   }
 
+  Future<void> signOut() {
+    return _auth.signOut();
+  }
+
   Future<FirebaseUser> get currentUser => _auth.currentUser();
 }

@@ -12,8 +12,10 @@ import 'package:twitter_clone_flutter/ui/widgets/like.dart';
 class TweetListScreen extends StatefulWidget {
   static Widget create(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) =>
-          TweetListViewModel(tweetService: Provider.of(context, listen: false)),
+      create: (context) => TweetListViewModel(
+        tweetService: Provider.of(context, listen: false),
+        authenticationService: Provider.of(context, listen: false),
+      ),
       child: TweetListScreen(
         key: PageStorageKey<String>('tweet_list'),
       ),
@@ -56,6 +58,14 @@ class _TweetListScreenState extends State<TweetListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('ホーム'),
+        actions: <Widget>[
+          RaisedButton(
+            child: Text('Sign out'),
+            onPressed: () async =>
+                await Provider.of<TweetListViewModel>(context, listen: false)
+                    .signOut(),
+          )
+        ],
       ),
       body: Consumer<TweetListViewModel>(
         builder: (context, vm, child) {

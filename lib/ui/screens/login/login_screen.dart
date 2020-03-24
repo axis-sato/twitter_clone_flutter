@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:twitter_clone_flutter/core/services/authentication_service.dart';
@@ -28,33 +27,17 @@ class LoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FutureBuilder(
-                  future: vm.currentUser,
-                  builder: (context, AsyncSnapshot<FirebaseUser> snapshot) =>
-                      snapshot.hasData
-                          ? snapshot.data == null
-                              ? RaisedButton(
-                                  child: Text('Sign in Google'),
-                                  onPressed: () {
-                                    vm.handleSingInWithGoogle().then(
-                                          (user) => Navigator.pushNamed(
-                                            context,
-                                            RoutePaths.Home,
-                                          ),
-                                        );
-                                  },
-                                )
-                              : RaisedButton(
-                                  child: Text('Go to Home page'),
-                                  onPressed: () {
-                                    Navigator.pushNamed(
-                                      context,
-                                      RoutePaths.Home,
-                                    );
-                                  },
-                                )
-                          : Container(),
-                )
+                RaisedButton(
+                  child: Text('Sign in Google'),
+                  onPressed: () {
+                    vm.handleSingInWithGoogle().then(
+                          (user) => Navigator.pushNamed(
+                            context,
+                            RoutePaths.Home,
+                          ),
+                        );
+                  },
+                ),
               ],
             ),
           );

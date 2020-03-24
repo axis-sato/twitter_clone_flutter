@@ -1,4 +1,5 @@
 class RoutePaths {
+  static const String Splash = 'splash';
   static const String Login = 'login';
   static const String Home = 'home';
   static const String TweetList = 'tweet_list';

@@ -3,6 +3,7 @@ import 'package:twitter_clone_flutter/core/utils/app_constants.dart';
 import 'package:twitter_clone_flutter/ui/screens/home_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/login/login_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/post_tweet/post_tweet_screen.dart';
+import 'package:twitter_clone_flutter/ui/screens/splash/splash_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet/tweet_screen_arguments.dart';
 import 'package:twitter_clone_flutter/ui/screens/tweet_list/tweet_list_screen.dart';
@@ -11,6 +12,9 @@ import 'package:twitter_clone_flutter/ui/screens/user_list/user_list_screen.dart
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RoutePaths.Splash:
+        return MaterialPageRoute(
+            builder: (context) => SplashScreen.create(context));
       case RoutePaths.Login:
         return MaterialPageRoute(
             builder: (context) => LoginScreen.create(context));

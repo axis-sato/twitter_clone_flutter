@@ -28,8 +28,7 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-//        initialRoute: RoutePaths.Home,
-        initialRoute: RoutePaths.Login,
+        initialRoute: RoutePaths.Splash,
         onGenerateRoute: Router.generateRoute,
       ),
     );

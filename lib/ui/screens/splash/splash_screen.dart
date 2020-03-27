@@ -24,16 +24,15 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Provider.of<SplashViewModel>(context, listen: false).currentUser.then(
-          (user) => Navigator.pushNamed(
+          (user) => Navigator.pushReplacementNamed(
               context, user == null ? RoutePaths.Login : RoutePaths.Home),
         );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.white,
-      child: Center(
+    return Scaffold(
+      body: Center(
         child: Text('スプラッシュ'),
       ),
     );

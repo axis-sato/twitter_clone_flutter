@@ -16,10 +16,14 @@ class Router {
         return MaterialPageRoute(
             builder: (context) => SplashScreen.create(context));
       case RoutePaths.Login:
-        return MaterialPageRoute(
-            builder: (context) => LoginScreen.create(context));
+        return PageRouteBuilder(
+          pageBuilder: (context, animation1, animation2) =>
+              LoginScreen.create(context),
+        );
       case RoutePaths.Home:
-        return MaterialPageRoute(builder: (_) => HomeScreen());
+        return PageRouteBuilder(
+          pageBuilder: (_, animation1, animation2) => HomeScreen(),
+        );
       case RoutePaths.TweetList:
         final key = PageStorageKey<String>('tweet_list');
         return MaterialPageRoute(

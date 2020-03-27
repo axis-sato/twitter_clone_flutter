@@ -60,11 +60,12 @@ class _TweetListScreenState extends State<TweetListScreen> {
         title: Text('ホーム'),
         actions: <Widget>[
           RaisedButton(
-            child: Text('Sign out'),
-            onPressed: () async =>
+              child: Text('Sign out'),
+              onPressed: () async {
                 await Provider.of<TweetListViewModel>(context, listen: false)
-                    .signOut(),
-          )
+                    .signOut();
+                Navigator.pushReplacementNamed(context, RoutePaths.Login);
+              })
         ],
       ),
       body: Consumer<TweetListViewModel>(

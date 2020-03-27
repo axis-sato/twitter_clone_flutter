@@ -29,13 +29,12 @@ class LoginScreen extends StatelessWidget {
               children: <Widget>[
                 RaisedButton(
                   child: Text('Sign in Google'),
-                  onPressed: () {
-                    vm.handleSingInWithGoogle().then(
-                          (user) => Navigator.pushNamed(
-                            context,
-                            RoutePaths.Home,
-                          ),
-                        );
+                  onPressed: () async {
+                    await vm.handleSingInWithGoogle();
+                    Navigator.pushReplacementNamed(
+                      context,
+                      RoutePaths.Home,
+                    );
                   },
                 ),
               ],
